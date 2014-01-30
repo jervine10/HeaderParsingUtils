@@ -1,4 +1,4 @@
-package com.accuweather.description.generator;
+package com.ervine.description.generator;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.accuweather.description.generator;
+package com.ervine.description.generator;
 
 
 public class Property implements Comparable<Property> {

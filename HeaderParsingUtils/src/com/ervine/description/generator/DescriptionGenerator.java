@@ -1,4 +1,4 @@
-package com.accuweather.description.generator;
+package com.ervine.description.generator;
 
 import java.util.Collections;
 import java.util.List;
