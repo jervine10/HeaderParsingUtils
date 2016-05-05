@@ -43,7 +43,7 @@ public class IsEqualAndHashMethodGenerator {
 					case NSINTEGER:
 					case NSUINTEGER:
 						implementation += "\tif (self." + property.getPropertyName() + " != [object " + property.getPropertyName() + "]) {\n" +
-								"\t\treturn NO;\n\t}"; 
+								"\t\treturn NO;\n\t}\n"; 
 						break;
 				}
 					break;
