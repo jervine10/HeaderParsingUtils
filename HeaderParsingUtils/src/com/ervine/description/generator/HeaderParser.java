@@ -81,11 +81,11 @@ public class HeaderParser {
 	private String stripObjectPropertyFromLine(String line) {
 		String property = "";
 		if (line.contains("*")) {
-			property = line.substring(line.indexOf('*') + 1, line.indexOf(';'));	
+			property = line.substring(line.lastIndexOf('*') + 1, line.indexOf(';'));	
 		} else if (line.contains("id ")) {
-			property = line.substring(line.indexOf("id ") + 3, line.indexOf(';'));
+			property = line.substring(line.lastIndexOf("id ") + 3, line.indexOf(';'));
 		} else if (line.contains("id<")) {
-			property = line.substring(line.indexOf('>') + 1, line.indexOf(';'));
+			property = line.substring(line.lastIndexOf('>') + 1, line.indexOf(';'));
 		}
 		property = stripLeadingWhiteSpace(property);
 		

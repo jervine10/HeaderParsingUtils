@@ -13,10 +13,12 @@ public class IsEqualAndHashMethodGenerator {
 
 	private String isEqual(List<Property> properties) {
 		String isEqual = "- (BOOL)isEqual:(id)object {\n" +
-				"\tif (object == self)\n" +
+				"\tif (object == self) {\n" +
 				"\t\treturn YES;\n" +
-				"\tif (!object || ![object isKindOfClass:[self class]])\n" +
+				"\t}\n" +
+				"\tif (!object || ![object isKindOfClass:[self class]]) {\n" +
 				"\t\treturn NO;\n" +
+				"\t}\n" +
 				"%s" +
 				"return YES;\n" +
 		"}";
@@ -25,23 +27,23 @@ public class IsEqualAndHashMethodGenerator {
 		for (Property property : properties) {
 			switch(property.getPropertyType()) {
 				case OBJECT:
-					implementation += "\tif((self." + property.getPropertyName() + " || [object " + property.getPropertyName() + "]) && " + 
-							"![self." + property.getPropertyName() + " isEqual:[object " + property.getPropertyName() + "]])\n" +
-								"\t\treturn NO;\n";;
+					implementation += "\tif ((self." + property.getPropertyName() + " || [object " + property.getPropertyName() + "]) && " + 
+							"![self." + property.getPropertyName() + " isEqual:[object " + property.getPropertyName() + "]]) {\n" +
+								"\t\treturn NO;\n\t}\n";;
 					break;
 				case PRIMITIVE:
 					switch(property.getPrimitiveType()) {
 					case BOOL:
-						implementation += "\tif(self." + property.getPropertyName() + " != [object is" + property.getCapitalName() + "])\n" +
-								"\t\treturn NO;\n"; 
+						implementation += "\tif (self." + property.getPropertyName() + " != [object is" + property.getCapitalName() + "]) {\n" +
+								"\t\treturn NO;\n\t}\n"; 
 						break;
 					case ENUM:
 					case INT:
 					case LONG:
 					case NSINTEGER:
 					case NSUINTEGER:
-						implementation += "\tif(self." + property.getPropertyName() + " != [object " + property.getPropertyName() + "])\n" +
-								"\t\treturn NO;\n"; 
+						implementation += "\tif (self." + property.getPropertyName() + " != [object " + property.getPropertyName() + "]) {\n" +
+								"\t\treturn NO;\n\t}"; 
 						break;
 				}
 					break;

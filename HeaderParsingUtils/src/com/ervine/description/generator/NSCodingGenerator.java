@@ -77,7 +77,7 @@ public class NSCodingGenerator {
 	}
 	
 	private String decode(List<Property> properties) {
-		String nsCoding = "- (id)initWithCoder:(NSCoder *)aDecoder {\n" +
+		String nsCoding = "- (instancetype)initWithCoder:(NSCoder *)aDecoder {\n" +
 				"\tif (self = [super init]) {\n" +
 					"%s" +
 				"\t}\n" +
@@ -95,7 +95,6 @@ public class NSCodingGenerator {
 				case PRIMITIVE:
 					switch(property.getPrimitiveType()) {
 						case LONG:
-							// TODO is int64 right here?
 							implementation += "\t\tself." + property.getPropertyName() + " = [aDecoder decodeInt64ForKey:" 
 									+ CONSTANT_PREFIX + property.getCapitalName() + "];\n"; 
 							break;
