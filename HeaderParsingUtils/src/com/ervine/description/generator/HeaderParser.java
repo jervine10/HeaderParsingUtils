@@ -26,7 +26,6 @@ public class HeaderParser {
 	}
 	
 	public List<Property> extractProperties(List<String> lines) {
-		
 		List<Property> properties = new ArrayList<Property>();
 		for (String line : lines) {
 			if (line.contains("@property")) {
@@ -34,15 +33,15 @@ public class HeaderParser {
 				String afterRightBrace = line.substring(line.indexOf(')') + 1);
 				afterRightBrace = stripLeadingWhiteSpace(afterRightBrace);
 				
-				Property property = getPropertyFromLine(afterRightBrace);
+				Property property = getPropertyFromLine(stripLeadingWhiteSpace(afterRightBrace));
 				if (property != null) {
+					property.setNullable((!line.contains("nonnull") || !line.contains("_Nonnull")) && property.getPropertyType() != PropertyType.PRIMITIVE);
 					properties.add(property);
 				}
 			}
 		}
 		
 		return properties;
-		
 	}
 	
 	private String stripLeadingWhiteSpace(String line) {
@@ -65,20 +64,23 @@ public class HeaderParser {
 				if (!line.contains("id ") && !line.contains("id<")) {
 					// No star, assuming it's an enum
 					String propertyName = stripEnumPropertyFromLine(line);
-					Property property = new Property(propertyName, PropertyType.PRIMITIVE, PrimitiveType.ENUM);
+					String enumName = stripEnumNameFromLine(line);
+					
+					Property property = new Property(propertyName, enumName, PropertyType.PRIMITIVE, PrimitiveType.ENUM);
 					return property;
 				}
 			}
 		}
 		
 		// must have been an object
-		String propertyName = stripObjectPropertyFromLine(line);
-		Property property = new Property(propertyName, PropertyType.OBJECT);
+		String propertyName = stripPropertyNameFromLine(line);
+		ClassType classType = stripPropertyTypeFromLine(line);
+		Property property = new Property(propertyName, classType, PropertyType.OBJECT);
 		
 		return property;
 	}
 	
-	private String stripObjectPropertyFromLine(String line) {
+	private String stripPropertyNameFromLine(String line) {
 		String property = "";
 		if (line.contains("*")) {
 			property = line.substring(line.lastIndexOf('*') + 1, line.indexOf(';'));	
@@ -89,6 +91,37 @@ public class HeaderParser {
 		}
 		property = stripLeadingWhiteSpace(property);
 		
+		return property;
+	}
+	
+	private ClassType stripPropertyTypeFromLine(String line) {
+		ClassType classType = null;
+		
+		String className = "";
+		if (line.contains("*") && line.contains("Array")) {
+			className = line.substring(line.indexOf("<") + 1, line.lastIndexOf('>') - 2);
+			classType = new ClassType(true, false, className, null, null);
+		} else if (line.contains("*")) {
+			className = line.substring(0, line.lastIndexOf('*') - 1);
+			classType = new ClassType(stripLeadingWhiteSpace(className));
+		} else if (line.contains("id ")) {
+			className = "id";
+			classType = new ClassType(stripLeadingWhiteSpace(className));
+		} else if (line.contains("id<")) {
+			// TODO pull protocols
+			className = "id";
+			classType = new ClassType(stripLeadingWhiteSpace(className));
+		}
+		
+		return classType;
+	}
+	
+	private String stripEnumNameFromLine(String line) {
+		String[] segments = line.split(" ");
+		String property = "";
+		if (segments.length >= 1) {
+			property = segments[0];
+		}
 		return property;
 	}
 

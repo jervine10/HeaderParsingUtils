@@ -108,6 +108,11 @@ public class Main {
 				System.out.println();
 				System.out.println("Dictionary methods can be found at: " + output.getAbsolutePath());
 				System.out.println();
+			} else if (arg0.equals("-swift")) {
+				// scan the top directory for .h files
+				String[] extensions = {"h"};
+				Collection<File> files = FileUtils.listFiles(new File(args[1]), extensions, false);
+				swiftPath(files);
 			} else if (arg0.equals("-h")) {
 				printHelp();
 			} 
@@ -164,6 +169,26 @@ public class Main {
 		String dictionary = dictionaryGenerator.generateDictionaryMethods(properties, classname);
 		return dictionary;
 	}
+	
+	private static void swiftPath(Collection<File> files) throws IOException {
+		SwiftGenerator swiftGenerator = new SwiftGenerator();
+		
+		for (File file : files) {
+			List<String> lines = FileUtils.readLines(file);
+			
+			List<Property> properties = headerParser.extractProperties(lines);
+			String className = headerParser.extractClassname(lines);
+			
+			File output = new File(className + ".swift");
+			
+			String swift = swiftGenerator.generateSwiftClass(properties, className);
+			FileUtils.writeStringToFile(output, swift, true);
+		}
+		
+		System.out.println();
+		System.out.println("Swift classes generated.");
+		System.out.println();
+	}
 
 	private static void printHelp() {
 		System.out.println();
@@ -174,6 +199,8 @@ public class Main {
 		System.out.println("\t -cc \t Provide a directory to search for .h files. Not recursive. Generates NSCoding methods and constants.");
 		System.out.println("\t -e \t Provide a single file to parse. Generates isEquals and hash methods.");
 		System.out.println("\t -ee \t Provide a directory to search for .h files. Not recursive. Generates isEquals and hash methods.");
+		
+		System.out.println("\t -swift Provide a directory to parse. Converts header files into Swift classes.");
 		
 		System.out.println("\t -dic \t Provide a single file to parse. Generates toDictionary methods.");
 		System.out.println("\t -ddic \t Provide a directory to search for .h files. Not recursive. Generates toDictionary methods.");
