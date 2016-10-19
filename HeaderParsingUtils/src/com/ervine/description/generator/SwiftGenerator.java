@@ -38,13 +38,13 @@ public class SwiftGenerator {
 	}
 	
 	private String classDeclaration(String className) {
-		String string = "class " + className + ": NSObject, NSCoding {\n\n";
+		String string = "public class " + className + ": NSObject, NSCoding {\n\n";
 		
 		return string;
 	}
 	
 	private String overrideInit() {
-		return "\toverride init() {\n\n\t}\n\n";
+		return "\toverride public init() {\n\n\t}\n\n";
 	}
 	
 	private String propertyDefinitions(List<Property> properties) {
@@ -57,9 +57,9 @@ public class SwiftGenerator {
 					String swiftName = getSwiftClassName(classType.getClassName());
 
 					if (classType.isArray()) {
-						implementation += "\tvar " + property.getPropertyName() + ": [" + swiftName + "]" + (property.getNullable() ? "?" : "") + "\n";
+						implementation += "\tpublic var " + property.getPropertyName() + ": [" + swiftName + "]" + (property.getNullable() ? "?" : "") + "\n";
 					} else {
-						implementation += "\tvar " + property.getPropertyName() + ": " + swiftName + (property.getNullable() ? "?" : "") + "\n";
+						implementation += "\tpublic var " + property.getPropertyName() + ": " + swiftName + (property.getNullable() ? "?" : "") + "\n";
 					}
 					break;
 				case PRIMITIVE:
@@ -68,9 +68,9 @@ public class SwiftGenerator {
 						if (property.getPrimitiveType() == PrimitiveType.BOOL) {
 							defaultValue = "false";
 						}
-						implementation += "\tvar " + property.getPropertyName() + ": " + property.getPrimitiveType().getSwiftPrimitiveType().getName() + (property.getNullable() ? "?" : " = " + defaultValue) + "\n";
+						implementation += "\tpublic var " + property.getPropertyName() + ": " + property.getPrimitiveType().getSwiftPrimitiveType().getName() + (property.getNullable() ? "?" : " = " + defaultValue) + "\n";
 					} else {
-						implementation += "\tvar " + property.getPropertyName() + ": " + property.getEnumName() + (property.getNullable() ? "?" : "") + "\n";
+						implementation += "\tpublic var " + property.getPropertyName() + ": " + property.getEnumName() + (property.getNullable() ? "?" : "") + "\n";
 					}
 					break;
 			}
@@ -81,7 +81,7 @@ public class SwiftGenerator {
 	}
 	
 	private String hashValue(List<Property> properties) {
-		String hashValue = "\toverride var hashValue: Int {\n" +
+		String hashValue = "\toverride public var hashValue: Int {\n" +
 				"\t\tlet prime = 31\n" +
 				"\t\tvar result = 1\n" +
 				"%s"+
@@ -117,7 +117,7 @@ public class SwiftGenerator {
 	}
 	
 	private String encode(List<Property> properties) {
-		String nsCoding = "\tfunc encode(with aCoder: NSCoder) {\n" +
+		String nsCoding = "\tpublic func encode(with aCoder: NSCoder) {\n" +
 				"%s" +
 		"\t}\n";
 		
@@ -159,7 +159,7 @@ public class SwiftGenerator {
 	}
 	
 	private String decode(List<Property> properties) {
-		String nsCoding = "\trequired init?(coder aDecoder: NSCoder) {\n" +
+		String nsCoding = "\trequired public init?(coder aDecoder: NSCoder) {\n" +
 				"%s" +
 		"\t}\n\n";
 		
