@@ -10,6 +10,7 @@ public enum PrimitiveType {
 	INT("int", "%d", SwiftPrimitiveType.Int),
 	BOOL("BOOL", "%d", SwiftPrimitiveType.Bool),
 	LONG("long", "%ld", SwiftPrimitiveType.Long),
+	CGFLOAT("CGFloat", "%f", SwiftPrimitiveType.Float),
 	ENUM("", "%d", null);
 	
 	private String name;

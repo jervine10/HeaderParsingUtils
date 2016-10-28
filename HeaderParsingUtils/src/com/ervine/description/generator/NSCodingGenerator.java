@@ -68,6 +68,10 @@ public class NSCodingGenerator {
 							implementation += "\t[aCoder encodeInteger:self." + property.getPropertyName() +
 									" forKey:" + CONSTANT_PREFIX + property.getCapitalName() + "];\n"; 
 							break;
+						case CGFLOAT:
+							implementation += "\t[aCoder encodeFloat:self." + property.getPropertyName() +
+							" forKey:" + CONSTANT_PREFIX + property.getCapitalName() + "];\n"; 
+							break;
 					}
 					break;
 			}
@@ -116,6 +120,10 @@ public class NSCodingGenerator {
 							break;
 						case NSUINTEGER:
 							implementation += "\t\tself." + property.getPropertyName() + " = [aDecoder decodeIntegerForKey:" 
+									+ CONSTANT_PREFIX + property.getCapitalName() + "];\n"; 
+							break;
+						case CGFLOAT:
+							implementation += "\t\tself." + property.getPropertyName() + " = [aDecoder decodeFloatForKey:" 
 									+ CONSTANT_PREFIX + property.getCapitalName() + "];\n"; 
 							break;
 					}

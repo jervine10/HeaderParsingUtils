@@ -48,6 +48,7 @@ public class NSDictionaryGenerator {
 				case LONG:
 				case NSINTEGER:
 				case NSUINTEGER:
+				case CGFLOAT:
 				default:
 					implementation += "\t" + CONSTANT_PREFIX + property.getCapitalName() +  " : @(self." + property.getPropertyName() + "),\n";
 				}
@@ -99,6 +100,10 @@ public class NSDictionaryGenerator {
 						case NSUINTEGER:
 							implementation += "\tobject." + property.getPropertyName() + " = [dictionary[" 
 									+ CONSTANT_PREFIX + property.getCapitalName() + "] unsignedIntegerValue];\n";
+							break;
+						case CGFLOAT:
+							implementation += "\tobject." + property.getPropertyName() + " = [dictionary[" 
+									+ CONSTANT_PREFIX + property.getCapitalName() + "] floatValue];\n";
 							break;
 					}
 					break;

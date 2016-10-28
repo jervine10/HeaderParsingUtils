@@ -2,7 +2,9 @@ package com.ervine.description.generator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -113,6 +115,21 @@ public class Main {
 				String[] extensions = {"h"};
 				Collection<File> files = FileUtils.listFiles(new File(args[1]), extensions, false);
 				swiftPath(files);
+			} else if (arg0.equals("-list")) {
+				String[] extensions = {"h"};
+				Collection<File> files = FileUtils.listFiles(new File(args[1]), extensions, true);
+				
+				List<String> imports = new ArrayList<String>();
+				for (File file : files) {
+					if (!file.isDirectory()) {
+						imports.add("#import \"" + file.getName() + "\"");
+					}
+				}
+				
+				Collections.sort(imports);
+				for (String string : imports) {
+					System.out.println(string);
+				}
 			} else if (arg0.equals("-h")) {
 				printHelp();
 			} 
@@ -200,7 +217,8 @@ public class Main {
 		System.out.println("\t -e \t Provide a single file to parse. Generates isEquals and hash methods.");
 		System.out.println("\t -ee \t Provide a directory to search for .h files. Not recursive. Generates isEquals and hash methods.");
 		
-		System.out.println("\t -swift Provide a directory to parse. Converts header files into Swift classes.");
+		System.out.println("\t -swift  Provide a directory to parse. Converts header files into Swift classes.");
+		System.out.println("\t -list   Provide a directory to parse. Prints out import statements.");
 		
 		System.out.println("\t -dic \t Provide a single file to parse. Generates toDictionary methods.");
 		System.out.println("\t -ddic \t Provide a directory to search for .h files. Not recursive. Generates toDictionary methods.");

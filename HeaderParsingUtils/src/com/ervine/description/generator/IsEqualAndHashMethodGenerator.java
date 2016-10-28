@@ -41,6 +41,7 @@ public class IsEqualAndHashMethodGenerator {
 					case INT:
 					case LONG:
 					case NSINTEGER:
+					case CGFLOAT:
 					case NSUINTEGER:
 						implementation += "\tif (self." + property.getPropertyName() + " != [object " + property.getPropertyName() + "]) {\n" +
 								"\t\treturn NO;\n\t}\n"; 
@@ -76,6 +77,7 @@ public class IsEqualAndHashMethodGenerator {
 					case ENUM:
 					case INT:
 					case LONG:
+					case CGFLOAT:
 					case NSINTEGER:
 					case NSUINTEGER:
 						implementation += "\tresult = prime * result + self." + property.getPropertyName() + ";\n"; 

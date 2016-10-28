@@ -106,9 +106,21 @@ public class SwiftGenerator {
 				}
 				
 				if (property.getNullable()) {
-					implementation += "\t\tresult = prime * result + (" + property.getPropertyName() + rawValue +  nullabilitySpecifier + descriptionText + ".hashValue ?? 0)\n";
+					if (property.getPropertyType() == PropertyType.PRIMITIVE && property.getPrimitiveType() == PrimitiveType.ENUM) {
+						implementation += "\t\tresult = prime * result + (" + property.getPropertyName() + rawValue + nullabilitySpecifier + ".hashValue ?? 0)\n";
+					} else if (property.getPropertyType() == PropertyType.PRIMITIVE) {
+						implementation += "\t\tresult = prime * result + Int(" + property.getPropertyName() + nullabilitySpecifier + descriptionText + " ?? 0)\n";
+					} else {
+						implementation += "\t\tresult = prime * result + (" + property.getPropertyName() + nullabilitySpecifier + descriptionText + ".hashValue ?? 0)\n";
+					}
 				} else {
-					implementation += "\t\tresult = prime * result + " + property.getPropertyName() + rawValue + descriptionText + "\n";
+					if (property.getPropertyType() == PropertyType.PRIMITIVE && property.getPrimitiveType() == PrimitiveType.ENUM) {
+						implementation += "\t\tresult = prime * result + " + property.getPropertyName() + rawValue + ".hashValue\n";
+					} else if (property.getPropertyType() == PropertyType.PRIMITIVE) {
+						implementation += "\t\tresult = prime * result + Int(" + property.getPropertyName() + ")\n";
+					} else {
+						implementation += "\t\tresult = prime * result + " + property.getPropertyName() + descriptionText + ".hashValue \n";
+					}
 				}
 			}
 		}
@@ -208,6 +220,12 @@ public class SwiftGenerator {
 						case NSINTEGER:
 						case NSUINTEGER:
 							decodingPart = property.getPropertyName() + " = aDecoder.decodeInteger(forKey: "
+									+ CONSTANT_PREFIX + property.getCapitalName() + ")\n";
+							
+							implementation += String.format(nullablePart, decodingPart);
+							break;
+						case CGFLOAT:
+							decodingPart = property.getPropertyName() + " = aDecoder.decodeFloat(forKey: "
 									+ CONSTANT_PREFIX + property.getCapitalName() + ")\n";
 							
 							implementation += String.format(nullablePart, decodingPart);
