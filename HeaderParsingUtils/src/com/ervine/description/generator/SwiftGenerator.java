@@ -247,7 +247,7 @@ public class SwiftGenerator {
 		
 		// private let name = ""
 		for(Property property : properties) {
-			String nullablePart = "";
+			String nullablePart = "\t%s\n";
 			if (property.getNullable()) {
 				nullablePart = "\tif lhs." + property.getPropertyName() + " == nil && rhs." + property.getPropertyName() + " != nil {\n\t\treturn false\n\t} else %s\n";
 			}
