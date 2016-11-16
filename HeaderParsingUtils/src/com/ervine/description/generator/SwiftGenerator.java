@@ -9,7 +9,13 @@ public class SwiftGenerator {
 	public String generateSwiftClass(List<Property> properties, String className) {
 		CONSTANT_PREFIX = className;
 		
-		String swiftClass = "//  Copyright © AccuWeather. All rights reserved.\n\nimport UIKit\n\n";
+		String swiftClass = "//  Copyright © AccuWeather. All rights reserved.\n\n"
+				+ "#if os(iOS) || os(watchOS) || os(tvOS)\n" +
+				    	"\timport UIKit\n" +
+				  "#else\n" +
+				    	"\timport Foundation\n" +
+				  "#endif"
+				+ "\n\n";
 		
 		swiftClass += constants(properties, className);
 		swiftClass += classDeclaration(className);
